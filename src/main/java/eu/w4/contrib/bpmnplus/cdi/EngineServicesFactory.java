@@ -1,6 +1,5 @@
 package eu.w4.contrib.bpmnplus.cdi;
 
-import java.lang.reflect.Proxy;
 import java.rmi.RemoteException;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -22,6 +21,7 @@ import eu.w4.engine.client.service.PrivilegeService;
 import eu.w4.engine.client.service.ProcessService;
 import eu.w4.engine.client.service.PrototypingService;
 import eu.w4.engine.client.service.PublicKeyService;
+import eu.w4.engine.client.service.SequenceFlowService;
 import eu.w4.engine.client.service.ServerService;
 import eu.w4.engine.client.service.TenantService;
 import eu.w4.engine.client.service.TransactionService;
@@ -32,69 +32,9 @@ public class EngineServicesFactory
 {
 
   @Produces
-  public AuthenticationService getAuthenticationService(EngineService engineService) throws RemoteException, CheckedException
-  {
-    return engineService.getAuthenticationService();
-  }
-
-  @Produces
-  public TransactionService getTransactionService(EngineService engineService) throws RemoteException, CheckedException
-  {
-    return engineService.getTransactionService();
-  }
-
-  @Produces
-  public TenantService getTenantService(EngineService engineService) throws RemoteException, CheckedException
-  {
-    return engineService.getTenantService();
-  }
-
-  @Produces
-  public UserService getUserService(EngineService engineService) throws RemoteException, CheckedException
-  {
-    return engineService.getUserService();
-  }
-
-  @Produces
-  public GroupService getGroupService(EngineService engineService) throws RemoteException, CheckedException
-  {
-    return engineService.getGroupService();
-  }
-
-  @Produces
   public ActivityService getActivityService(EngineService engineService) throws RemoteException, CheckedException
   {
     return engineService.getActivityService();
-  }
-
-  @Produces
-  public ProcessService getProcessService(EngineService engineService) throws RemoteException, CheckedException
-  {
-    return engineService.getProcessService();
-  }
-
-  @Produces
-  public DefinitionsService getDefinitionsService(EngineService engineService) throws RemoteException, CheckedException
-  {
-    return engineService.getDefinitionsService();
-  }
-
-  @Produces
-  public PrivilegeService getPrivilegeService(EngineService engineService) throws RemoteException, CheckedException
-  {
-    return engineService.getPrivilegeService();
-  }
-
-  @Produces
-  public PrototypingService getPrototypingService(EngineService engineService) throws RemoteException, CheckedException
-  {
-    return engineService.getPrototypingService();
-  }
-
-  @Produces
-  public ConversationService getConversationService(EngineService engineService) throws RemoteException, CheckedException
-  {
-    return engineService.getConversationService();
   }
 
   @Produces
@@ -104,9 +44,21 @@ public class EngineServicesFactory
   }
 
   @Produces
-  public TypeDefinitionService getTypeDefinitionService(EngineService engineService) throws RemoteException, CheckedException
+  public AuthenticationService getAuthenticationService(EngineService engineService) throws RemoteException, CheckedException
   {
-    return engineService.getTypeDefinitionService();
+    return engineService.getAuthenticationService();
+  }
+
+  @Produces
+  public ConversationService getConversationService(EngineService engineService) throws RemoteException, CheckedException
+  {
+    return engineService.getConversationService();
+  }
+
+  @Produces
+  public DefinitionsService getDefinitionsService(EngineService engineService) throws RemoteException, CheckedException
+  {
+    return engineService.getDefinitionsService();
   }
 
   @Produces
@@ -116,15 +68,46 @@ public class EngineServicesFactory
   }
 
   @Produces
+  public GatewayService getGatewayService(EngineService engineService) throws RemoteException, CheckedException
+  {
+    return engineService.getGatewayService();
+  }
+
+  @Produces
+  public GroupService getGroupService(EngineService engineService) throws RemoteException, CheckedException
+  {
+    return engineService.getGroupService();
+  }
+
+  @Produces
   public LanguageService getLanguageService(EngineService engineService) throws RemoteException, CheckedException
   {
     return engineService.getLanguageService();
   }
 
+  @ApplicationScoped
   @Produces
-  public GatewayService getGatewayService(EngineService engineService) throws RemoteException, CheckedException
+  public ObjectFactory getObjectFactory(EngineService engineService) throws RemoteException, CheckedException
   {
-    return engineService.getGatewayService();
+    return engineService.getObjectFactory();
+  }
+
+  @Produces
+  public PrivilegeService getPrivilegeService(EngineService engineService) throws RemoteException, CheckedException
+  {
+    return engineService.getPrivilegeService();
+  }
+
+  @Produces
+  public ProcessService getProcessService(EngineService engineService) throws RemoteException, CheckedException
+  {
+    return engineService.getProcessService();
+  }
+
+  @Produces
+  public PrototypingService getPrototypingService(EngineService engineService) throws RemoteException, CheckedException
+  {
+    return engineService.getPrototypingService();
   }
 
   @Produces
@@ -134,16 +117,38 @@ public class EngineServicesFactory
   }
 
   @Produces
+  public SequenceFlowService getSequenceFlowService(EngineService engineService) throws RemoteException, CheckedException
+  {
+    return engineService.getSequenceFlowService();
+  }
+
+  @Produces
   public ServerService getServerService(EngineService engineService) throws RemoteException, CheckedException
   {
     return engineService.getServerService();
   }
 
-  @ApplicationScoped
   @Produces
-  public ObjectFactory getObjectFactory(EngineService engineService) throws RemoteException, CheckedException
+  public TenantService getTenantService(EngineService engineService) throws RemoteException, CheckedException
   {
-    ObjectFactory factory = engineService.getObjectFactory();
-    return (ObjectFactory) Proxy.newProxyInstance(factory.getClass().getClassLoader(), new Class[] { ObjectFactory.class }, new ResultCachingProxyHandler<ObjectFactory>(factory));
+    return engineService.getTenantService();
+  }
+
+  @Produces
+  public TransactionService getTransactionService(EngineService engineService) throws RemoteException, CheckedException
+  {
+    return engineService.getTransactionService();
+  }
+
+  @Produces
+  public TypeDefinitionService getTypeDefinitionService(EngineService engineService) throws RemoteException, CheckedException
+  {
+    return engineService.getTypeDefinitionService();
+  }
+
+  @Produces
+  public UserService getUserService(EngineService engineService) throws RemoteException, CheckedException
+  {
+    return engineService.getUserService();
   }
 }

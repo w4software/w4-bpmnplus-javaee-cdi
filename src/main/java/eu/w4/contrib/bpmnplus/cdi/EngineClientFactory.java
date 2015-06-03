@@ -2,6 +2,7 @@ package eu.w4.contrib.bpmnplus.cdi;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.rmi.RemoteException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
@@ -12,16 +13,18 @@ import javax.inject.Singleton;
 
 import eu.w4.common.configuration.ConfigurationParameter;
 import eu.w4.common.exception.CheckedException;
+import eu.w4.contrib.bpmnplus.apiextra.ExtraConfigurationParameter;
+import eu.w4.contrib.bpmnplus.apiextra.ExtraEngineServiceFactory;
 import eu.w4.engine.client.configuration.NetworkConfigurationParameter;
 import eu.w4.engine.client.service.EngineService;
-import eu.w4.engine.client.service.EngineServiceFactory;
 
 @Singleton
 public class EngineClientFactory
 {
   public static final String PROPERTY_FILE_NAME = "w4bpmnplus.properties";
 
-  private EngineService _service;
+  private volatile EngineService _service;
+  private Map<ConfigurationParameter, String> _configurationParameters;
 
   @PostConstruct
   public void construct()
@@ -34,22 +37,44 @@ public class EngineClientFactory
     {
       properties.load(inputStream);
     }
-    final Map<ConfigurationParameter, String> configurationParameters = new HashMap<ConfigurationParameter, String>();
+    _configurationParameters = new HashMap<ConfigurationParameter, String>();
     for (final NetworkConfigurationParameter configurationParameter : NetworkConfigurationParameter.values())
     {
       final String value = properties.getProperty(configurationParameter.name());
       if (value != null)
       {
-        configurationParameters.put(configurationParameter, value);
+        _configurationParameters.put(configurationParameter, value);
       }
     }
+    for (final ExtraConfigurationParameter configurationParameter : ExtraConfigurationParameter.values())
+    {
+      final String value = properties.getProperty(configurationParameter.name());
+      if (value != null)
+      {
+        _configurationParameters.put(configurationParameter, value);
+      }
+    }
+  }
 
-    _service = EngineServiceFactory.getEngineService(configurationParameters);
+  private void buildService() throws CheckedException, RemoteException
+  {
+    synchronized (_configurationParameters)
+    {
+      if (_service == null)
+      {
+        _service = ExtraEngineServiceFactory.getEngineService(_configurationParameters);
+      }
+    }
   }
 
   @Produces
-  public EngineService getService()
+  public EngineService getService() throws CheckedException, RemoteException
   {
+    if (_service == null)
+    {
+      buildService();
+    }
     return _service;
   }
+
 }

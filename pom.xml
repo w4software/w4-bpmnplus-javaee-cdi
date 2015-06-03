@@ -4,7 +4,7 @@
 
   <groupId>eu.w4.contrib</groupId>
   <artifactId>bpmnplus-cdi</artifactId>
-  <version>9.2.0.0</version>
+  <version>9.3.0.0</version>
   <packaging>jar</packaging>
   <name>CDI BPMNPlus Engine Client</name>
   <description>W4 BPMNPlus Bindings for CDI 1.1 (JSR-346)</description>
@@ -17,15 +17,15 @@
   </properties>
 
   <repositories>
-  	<!--
-  	  To be able to access the following repository, you will need to configure
-  	  your w4store's credentials in maven settings.xml with the following snippet
-  	    <server>
-    	    <id>w4store</id>
-    	    <username>...</username>
-    	    <password>mypass456</password>
+    <!--
+      To be able to access the following repository, you will need to configure
+      your w4store's credentials in maven settings.xml with the following snippet
+        <server>
+          <id>w4store</id>
+          <username>...</username>
+          <password>...</password>
         </server>
-  	-->
+    -->
     <repository>
       <id>w4store</id>
       <releases>
@@ -51,6 +51,12 @@
     <dependency>
       <groupId>eu.w4</groupId>
       <artifactId>bpmn-engine-client</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>eu.w4.contrib</groupId>
+      <artifactId>bpmnplus-api-extra</artifactId>
       <version>${project.version}</version>
     </dependency>
   </dependencies>

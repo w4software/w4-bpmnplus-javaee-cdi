@@ -1,6 +1,5 @@
 package eu.w4.contrib.bpmnplus.cdi;
 
-import java.lang.reflect.Proxy;
 import java.rmi.RemoteException;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -31,8 +30,7 @@ public class EciServicesFactory
   @Produces
   public EciObjectFactory getObjectFactory(final EngineService engineService) throws RemoteException, CheckedException
   {
-    final EciObjectFactory factory = engineService.getEciObjectFactory();
-    return (EciObjectFactory) Proxy.newProxyInstance(factory.getClass().getClassLoader(), new Class[] { EciObjectFactory.class }, new ResultCachingProxyHandler<EciObjectFactory>(factory));
+    return engineService.getEciObjectFactory();
   }
 
 }
